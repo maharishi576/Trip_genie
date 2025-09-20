@@ -1,50 +1,194 @@
-# Welcome to your Expo app 👋
+# Trip Genie - Travel Planning Application
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![Trip Genie Logo](🧳)
 
-## Get started
+A modern travel planning application with React Native frontend and Spring Boot backend.
 
-1. Install dependencies
+## 📱 Demo Features
 
+- **Browse Destinations**: Explore popular travel destinations with ratings and attractions
+- **Trip Planning**: Plan your trips with dates, travelers, and budget
+- **User Authentication**: Demo signup/login functionality
+- **Real-time API**: Frontend connected to Spring Boot backend
+- **Responsive Design**: Works on web, iOS, and Android
+
+## 🛠️ Technical Stack
+
+### Frontend
+- **React Native** with **Expo**
+- **TypeScript** for type safety
+- **Expo Router** for navigation
+- Cross-platform (Web, iOS, Android)
+
+### Backend
+- **Spring Boot 3.2.12** with **Java 17**
+- **H2 Database** (in-memory for demo)
+- **Spring Security** (disabled for demo)
+- **RESTful APIs** with CORS enabled
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20+ and npm
+- Java 17+
+- Git
+
+### Running the Demo
+
+1. **Clone and navigate to the repository**:
+   ```bash
+   git clone <repository-url>
+   cd Trip_genie
+   ```
+
+2. **Install frontend dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the demo** (automated script):
    ```bash
-   npx expo start
+   ./start-demo.sh
    ```
 
-In the output, you'll find options to open the app in a
+4. **Or start services manually**:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   **Backend** (Terminal 1):
+   ```bash
+   cd trip-genie-backend
+   ./mvnw spring-boot:run
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   **Frontend** (Terminal 2):
+   ```bash
+   npm run web
+   ```
 
-## Get a fresh project
+### 🌐 Access Points
 
-When you're ready, run:
+Once running, you can access:
 
+- **Frontend Web App**: http://localhost:19006
+- **Backend API**: http://localhost:8080
+- **Health Check**: http://localhost:8080/api/trips/health
+- **H2 Database Console**: http://localhost:8080/h2-console
+  - JDBC URL: `jdbc:h2:mem:demodb`
+  - Username: `sa`
+  - Password: `password`
+
+## 📱 Mobile Development
+
+### iOS/Android Development
 ```bash
-npm run reset-project
+# For iOS simulator
+npm run ios
+
+# For Android emulator  
+npm run android
+
+# For development build
+npm run start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🔧 API Endpoints
 
-## Learn more
+### Trips
+- `GET /api/trips/destinations` - Get all destinations
+- `GET /api/trips/destinations/{id}` - Get specific destination
+- `POST /api/trips/plan` - Plan a new trip
+- `GET /api/trips/health` - Health check
 
-To learn more about developing your project with Expo, look at the following resources:
+### Authentication (Demo Mode)
+- `POST /api/auth/signup/request-otp` - Request OTP
+- `POST /api/auth/signup/verify-otp` - Verify OTP and register
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📝 Demo Data
 
-## Join the community
+The application includes sample destinations:
+- Paris, France
+- Tokyo, Japan
+- New York, USA
+- London, UK
+- Bali, Indonesia
 
-Join our community of developers creating universal apps.
+## 🔄 Development Workflow
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. **Backend Changes**: Automatic restart with Spring Boot DevTools
+2. **Frontend Changes**: Hot reload with Expo
+3. **Database**: H2 in-memory (resets on restart)
+4. **CORS**: Configured for localhost:19006 and localhost:3000
+
+## 📊 Project Structure
+
+```
+Trip_genie/
+├── trip-genie-backend/          # Spring Boot backend
+│   ├── src/main/java/           # Java source code
+│   ├── src/main/resources/      # Configuration files
+│   └── pom.xml                  # Maven dependencies
+├── app/                         # React Native app
+│   ├── (tabs)/                  # Tab navigation screens
+│   └── _layout.tsx              # Root layout
+├── components/                  # Reusable UI components
+├── constants/                   # App constants
+├── package.json                 # Frontend dependencies
+└── start-demo.sh               # Demo startup script
+```
+
+## 🚀 Production Deployment
+
+For production deployment:
+
+1. **Backend**: 
+   - Replace H2 with production database (MySQL/PostgreSQL)
+   - Enable Spring Security
+   - Configure production profiles
+   - Set environment variables
+
+2. **Frontend**:
+   - Build for production: `npm run build`
+   - Deploy to hosting service
+   - Update API endpoints
+
+## 🛡️ Security Notes
+
+- **Demo Mode**: Authentication is simplified for demonstration
+- **CORS**: Currently allows all localhost origins
+- **Database**: Using in-memory H2 (data doesn't persist)
+- **Passwords**: BCrypt hashing is configured but not used in demo
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+- **Port 8080 in use**: Change port in `application.properties`
+- **Java version**: Ensure Java 17+ is installed
+- **Maven issues**: Use `./mvnw clean install`
+
+### Frontend Issues
+- **Metro bundler issues**: Clear cache with `npx expo start --clear`
+- **Port conflicts**: Expo will find alternative ports
+- **Network issues**: Check firewall settings
+
+### API Connection Issues
+- Ensure backend is running on port 8080
+- Check CORS configuration in `CorsConfig.java`
+- Verify API URLs in frontend code
+
+## 📈 Next Steps for Full Production
+
+1. **User Authentication**: Implement full JWT-based auth
+2. **Database**: Set up persistent database with migrations
+3. **Payment Integration**: Add booking and payment features
+4. **Email Service**: Implement real email/SMS for OTP
+5. **Push Notifications**: Add mobile notifications
+6. **Offline Support**: Cache data for offline use
+7. **Testing**: Add comprehensive test suites
+8. **CI/CD**: Set up automated deployment pipelines
+
+## 📞 Support
+
+For development questions or issues:
+- Check the console logs
+- Verify all services are running
+- Ensure ports 8080 and 19006 are available
+- Review this README for common solutions
