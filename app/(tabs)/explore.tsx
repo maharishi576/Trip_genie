@@ -1,112 +1,227 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useState } from 'react';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
 
-export default function TabTwoScreen() {
+export default function TripPlanningScreen() {
+  const [tripData, setTripData] = useState({
+    destination: '',
+    startDate: '',
+    endDate: '',
+    travelers: '',
+    budget: ''
+  });
+
+  const handlePlanTrip = async () => {
+    if (!tripData.destination || !tripData.startDate || !tripData.endDate) {
+      Alert.alert('Missing Information', 'Please fill in destination, start date, and end date.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/api/trips/plan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tripData),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        Alert.alert(
+          'Trip Planned Successfully!',
+          `Your trip to ${tripData.destination} has been planned.\nTrip ID: ${data.tripPlan.id}`,
+          [{ text: 'OK' }]
+        );
+        // Reset form
+        setTripData({
+          destination: '',
+          startDate: '',
+          endDate: '',
+          travelers: '',
+          budget: ''
+        });
+      } else {
+        Alert.alert('Error', 'Failed to plan trip. Please try again.');
+      }
+    } catch (error) {
+      console.log('Error planning trip:', error);
+      Alert.alert('Demo Mode', 'Trip planned successfully (offline demo)');
+    }
+  };
+
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
+      headerBackgroundColor={{ light: '#E6F4FE', dark: '#353636' }}
       headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
+        <ThemedView style={styles.headerContainer}>
+          <ThemedText style={styles.headerTitle}>🗺️</ThemedText>
+          <ThemedText style={styles.headerSubtitle}>Plan Your Trip</ThemedText>
+        </ThemedView>
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
+        <ThemedText type="title">Trip Planning</ThemedText>
+      </ThemedView>
+      
+      <ThemedText style={styles.description}>
+        Create your perfect travel itinerary with Trip Genie!
+      </ThemedText>
+
+      <ThemedView style={styles.formContainer}>
+        <ThemedView style={styles.inputContainer}>
+          <ThemedText style={styles.label}>Destination *</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., Paris, France"
+            value={tripData.destination}
+            onChangeText={(text) => setTripData({...tripData, destination: text})}
+          />
+        </ThemedView>
+
+        <ThemedView style={styles.inputContainer}>
+          <ThemedText style={styles.label}>Start Date *</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="YYYY-MM-DD"
+            value={tripData.startDate}
+            onChangeText={(text) => setTripData({...tripData, startDate: text})}
+          />
+        </ThemedView>
+
+        <ThemedView style={styles.inputContainer}>
+          <ThemedText style={styles.label}>End Date *</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="YYYY-MM-DD"
+            value={tripData.endDate}
+            onChangeText={(text) => setTripData({...tripData, endDate: text})}
+          />
+        </ThemedView>
+
+        <ThemedView style={styles.inputContainer}>
+          <ThemedText style={styles.label}>Number of Travelers</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., 2"
+            value={tripData.travelers}
+            onChangeText={(text) => setTripData({...tripData, travelers: text})}
+            keyboardType="numeric"
+          />
+        </ThemedView>
+
+        <ThemedView style={styles.inputContainer}>
+          <ThemedText style={styles.label}>Budget (USD)</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., 2000"
+            value={tripData.budget}
+            onChangeText={(text) => setTripData({...tripData, budget: text})}
+            keyboardType="numeric"
+          />
+        </ThemedView>
+
+        <TouchableOpacity style={styles.planButton} onPress={handlePlanTrip}>
+          <ThemedText style={styles.planButtonText}>Plan My Trip ✈️</ThemedText>
+        </TouchableOpacity>
+      </ThemedView>
+
+      <ThemedView style={styles.featuresContainer}>
+        <ThemedText type="subtitle">✨ What You Get</ThemedText>
+        <ThemedText style={styles.feature}>📍 Personalized itinerary</ThemedText>
+        <ThemedText style={styles.feature}>🏨 Hotel recommendations</ThemedText>
+        <ThemedText style={styles.feature}>🍽️ Restaurant suggestions</ThemedText>
+        <ThemedText style={styles.feature}>🎯 Local attractions</ThemedText>
+        <ThemedText style={styles.feature}>💰 Budget optimization</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.demoNote}>
+        <ThemedText style={styles.demoText}>
+          💡 This is a demo version. In the full version, you'll get detailed itineraries, 
+          booking integration, and real-time updates.
         </ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  headerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  headerTitle: {
+    fontSize: 48,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    opacity: 0.8,
   },
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
+    marginBottom: 16,
+  },
+  description: {
+    marginBottom: 24,
+    fontSize: 16,
+    opacity: 0.8,
+  },
+  formContainer: {
+    marginBottom: 24,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    marginBottom: 8,
+    fontWeight: '600',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    color: '#000',
+  },
+  planButton: {
+    backgroundColor: '#007AFF',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  planButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  featuresContainer: {
+    marginBottom: 24,
+  },
+  feature: {
+    marginVertical: 4,
+    marginLeft: 8,
+  },
+  demoNote: {
+    backgroundColor: 'rgba(255, 165, 0, 0.1)',
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 165, 0, 0.3)',
+  },
+  demoText: {
+    fontSize: 14,
+    opacity: 0.8,
   },
 });

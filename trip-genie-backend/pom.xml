@@ -39,12 +39,21 @@
     </repositories>
     
     <dependencies>
-        <!-- Existing dependencies -->
+        <!-- Demo Mode: H2 in-memory database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- MySQL for production (commented out for demo) -->
+        <!--
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
+        -->
         
         <!-- Brevo Java SDK dependency commented out for demo -->
         <!--
