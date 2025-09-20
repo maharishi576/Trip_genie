@@ -1,23 +1,21 @@
 package com.example.trip_genie_backend.service;
 
-import com.example.trip_genie_backend.model.Otp;
-import com.example.trip_genie_backend.repository.OtpRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.sendinblue.ApiClient;
-import com.sendinblue.auth.ApiKeyAuth;
-import sibApi.TransactionalEmailsApi;
-import sibModel.*;
+// import com.sendinblue.ApiClient;
+// import com.sendinblue.auth.ApiKeyAuth;
+// import sibApi.TransactionalEmailsApi;
+// import sibModel.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.trip_genie_backend.model.Otp;
+import com.example.trip_genie_backend.repository.OtpRepository;
 
 @Service
 public class OtpService {
@@ -27,14 +25,9 @@ public class OtpService {
     private OtpRepository otpRepository;
 
     // Injected from application.properties for better security and configuration
-    @Value("${brevo.api.key}")
-    private String brevoApiKey;
-
-    @Value("${brevo.sender.email}")
-    private String senderEmail;
-
-    @Value("${brevo.sender.name}")
-    private String senderName;
+    // Demo: Hardcoded sender info for SMTP stub
+        private String senderEmail = "demo@tripgenie.com"; // Updated to match class name
+    // private String senderName = "TripGenie Demo";
 
     private static final long OTP_VALID_DURATION_MINUTES = 5;
 
@@ -102,40 +95,9 @@ public class OtpService {
      * Sends an email using the Brevo (Sendinblue) API.
      * This method now uses configuration values injected from application.properties.
      */
+    // Demo: Hardcoded SMTP stub for email sending
     private boolean sendEmail(String to, String otp) {
-        // 1. Configure API client using the injected API key
-        ApiClient defaultClient = sibApi.Configuration.getDefaultApiClient();
-        ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey(brevoApiKey);
-
-        TransactionalEmailsApi apiInstance = new TransactionalEmailsApi(defaultClient);
-
-        // 2. Define Sender (from config) and Recipient
-        SendSmtpEmailSender sender = new SendSmtpEmailSender()
-                .name(senderName)
-                .email(senderEmail);
-
-        List<SendSmtpEmailTo> toList = Collections.singletonList(new SendSmtpEmailTo().email(to));
-
-        // 3. Create the Email Object
-        SendSmtpEmail sendSmtpEmail = new SendSmtpEmail()
-                .sender(sender)
-                .to(toList)
-                .subject("Your One-Time Password")
-                .htmlContent("<html><body><h1>Your OTP Code</h1><p>Your one-time password is: <b>" + otp + "</b></p><p>It is valid for 5 minutes.</p></body></html>")
-                .textContent("Your OTP is: " + otp);
-
-        try {
-            // 4. Send the email
-            CreateSmtpEmail result = apiInstance.sendTransacEmail(sendSmtpEmail);
-            System.out.println("Email sent successfully. Message ID: " + result.getMessageId());
-            return true;
-        } catch (sibApi.ApiException e) {
-            System.err.println("Exception when calling TransactionalEmailsApi#sendTransacEmail");
-            System.err.println("Status code: " + e.getCode());
-            System.err.println("Reason: " + e.getResponseBody());
-            e.printStackTrace();
-            return false;
-        }
+        System.out.println("[DEMO] Pretend to send OTP " + otp + " to " + to + " from " + senderEmail);
+        return true; // Always succeed for demo
     }
 }

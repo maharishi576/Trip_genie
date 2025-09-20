@@ -1,9 +1,11 @@
 package com.example.trip_genie_backend.repository;
-import com.example.trip_genie_backend.dto.Otp;
+import java.time.Instant;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Optional;
-import java.time.Instant;
+
+import com.example.trip_genie_backend.model.Otp;
 
 @Repository
 public interface OtpRepository extends JpaRepository<Otp, Long> {
