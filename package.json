@@ -1,0 +1,27 @@
+{
+  "name": "trip-genie",
+  "version": "1.0.0",
+  "description": "Full-stack travel guide application with React Native frontend and Java Spring Boot backend",
+  "private": true,
+  "workspaces": [
+    "trip-genie-frontend"
+  ],
+  "scripts": {
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:frontend": "cd trip-genie-frontend && npm start",
+    "start:backend": "cd trip-genie-backend && ./mvnw spring-boot:run",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd trip-genie-frontend && npm test",
+    "test:backend": "cd trip-genie-backend && ./mvnw test",
+    "install:frontend": "cd trip-genie-frontend && npm install",
+    "install:backend": "cd trip-genie-backend && ./mvnw dependency:resolve",
+    "build:frontend": "cd trip-genie-frontend && npm run build",
+    "build:backend": "cd trip-genie-backend && ./mvnw package"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["react-native", "spring-boot", "travel", "mobile-app"],
+  "author": "maharishi576",
+  "license": "MIT"
+}

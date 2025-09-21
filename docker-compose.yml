@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./trip-genie-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - trip-genie-network
+
+  # Add database when needed
+  # postgres:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: trip_genie
+  #     POSTGRES_USER: trip_user
+  #     POSTGRES_PASSWORD: trip_password
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - trip-genie-network
+
+networks:
+  trip-genie-network:
+    driver: bridge
