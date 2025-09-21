@@ -22,7 +22,6 @@ public class UserService {
     /**
      * Registers a new user.
      * 
-     * now access my code with complete frontend and backend repo and tell what chnges need to be done in all scenarios to make the code run & working on localhost. include everything that needs to be done. just dont changes any logics 
      * 
      * 
      * The password is encrypted before the user is saved to the database.
