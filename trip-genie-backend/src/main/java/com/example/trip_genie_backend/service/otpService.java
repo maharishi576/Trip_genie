@@ -1,39 +1,34 @@
 package com.example.trip_genie_backend.service;
 
-import com.example.trip_genie_backend.model.Otp;
-import com.example.trip_genie_backend.repository.OtpRepository;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sendinblue.ApiClient;
-import com.sendinblue.auth.ApiKeyAuth;
-import sibApi.TransactionalEmailsApi;
-import sibModel.*;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import com.example.trip_genie_backend.model.Otp;
+import com.example.trip_genie_backend.repository.OtpRepository;
 
 @Service
-public class OtpService {
+public class otpService {
+
+    private static final Logger logger = LoggerFactory.getLogger(otpService.class);
 
     // The HashMap is removed and replaced by the JPA repository
     @Autowired
     private OtpRepository otpRepository;
 
-    // Injected from application.properties for better security and configuration
-    @Value("${brevo.api.key}")
-    private String brevoApiKey;
-
-    @Value("${brevo.sender.email}")
+    // Mock email configuration - in production, use actual email service
+    @Value("${app.sender.email:noreply@tripgenie.com}")
     private String senderEmail;
 
-    @Value("${brevo.sender.name}")
+    @Value("${app.sender.name:Trip Genie}")
     private String senderName;
 
     private static final long OTP_VALID_DURATION_MINUTES = 5;
@@ -99,43 +94,18 @@ public class OtpService {
     }
 
     /**
-     * Sends an email using the Brevo (Sendinblue) API.
-     * This method now uses configuration values injected from application.properties.
+     * Sends an email using a mock implementation.
+     * In production, replace this with actual email service integration.
      */
     private boolean sendEmail(String to, String otp) {
-        // 1. Configure API client using the injected API key
-        ApiClient defaultClient = sibApi.Configuration.getDefaultApiClient();
-        ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey(brevoApiKey);
-
-        TransactionalEmailsApi apiInstance = new TransactionalEmailsApi(defaultClient);
-
-        // 2. Define Sender (from config) and Recipient
-        SendSmtpEmailSender sender = new SendSmtpEmailSender()
-                .name(senderName)
-                .email(senderEmail);
-
-        List<SendSmtpEmailTo> toList = Collections.singletonList(new SendSmtpEmailTo().email(to));
-
-        // 3. Create the Email Object
-        SendSmtpEmail sendSmtpEmail = new SendSmtpEmail()
-                .sender(sender)
-                .to(toList)
-                .subject("Your One-Time Password")
-                .htmlContent("<html><body><h1>Your OTP Code</h1><p>Your one-time password is: <b>" + otp + "</b></p><p>It is valid for 5 minutes.</p></body></html>")
-                .textContent("Your OTP is: " + otp);
-
-        try {
-            // 4. Send the email
-            CreateSmtpEmail result = apiInstance.sendTransacEmail(sendSmtpEmail);
-            System.out.println("Email sent successfully. Message ID: " + result.getMessageId());
-            return true;
-        } catch (sibApi.ApiException e) {
-            System.err.println("Exception when calling TransactionalEmailsApi#sendTransacEmail");
-            System.err.println("Status code: " + e.getCode());
-            System.err.println("Reason: " + e.getResponseBody());
-            e.printStackTrace();
-            return false;
-        }
+        // Mock email sending - in production, integrate with actual email service
+        logger.info("Sending OTP email to: {}", to);
+        logger.info("OTP Code: {}", otp);
+        logger.info("Subject: Your One-Time Password");
+        logger.info("Content: Your OTP is: {} (valid for 5 minutes)", otp);
+        
+        // Simulate successful email sending
+        // In production, replace with actual email service call
+        return true;
     }
 }

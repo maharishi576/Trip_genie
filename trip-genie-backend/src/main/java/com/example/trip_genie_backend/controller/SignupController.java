@@ -7,16 +7,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.trip_genie_backend.service.OtpService;
+import com.example.trip_genie_backend.model.User;
+import com.example.trip_genie_backend.service.otpService;
+import com.example.trip_genie_backend.service.userService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class SignupController {
 
     @Autowired
-    private OtpService otpService;
+    private otpService otpService;
     @Autowired
-    private UserService userService;
+    private userService userService;
 
     // 1. Request OTP
     @PostMapping("/signup/request-otp")
@@ -42,12 +44,43 @@ public class SignupController {
     public static class SignupRequest {
         private String email;
         // + mobile, name, etc.
-        // getters & setters
+        
+        public String getEmail() {
+            return email;
+        }
+        
+        public void setEmail(String email) {
+            this.email = email;
+        }
     }
+    
     public static class OtpVerifyRequest {
         private String email;
         private String otp;
         private User userDetails; // contains other fields
-        // getters & setters
+        
+        public String getEmail() {
+            return email;
+        }
+        
+        public void setEmail(String email) {
+            this.email = email;
+        }
+        
+        public String getOtp() {
+            return otp;
+        }
+        
+        public void setOtp(String otp) {
+            this.otp = otp;
+        }
+        
+        public User getUserDetails() {
+            return userDetails;
+        }
+        
+        public void setUserDetails(User userDetails) {
+            this.userDetails = userDetails;
+        }
     }
 }

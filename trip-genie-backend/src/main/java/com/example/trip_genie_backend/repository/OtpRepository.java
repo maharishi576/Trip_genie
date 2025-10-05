@@ -1,5 +1,5 @@
 package com.example.trip_genie_backend.repository;
-import com.example.trip_genie_backend.dto.Otp;
+import com.example.trip_genie_backend.model.Otp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

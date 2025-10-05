@@ -1,7 +1,6 @@
-package com.example.demo.service;
+package com.example.trip_genie_backend;
 
 import org.springframework.stereotype.Service;
-import com.example.demo.model.User;
 
 @Service
 public class UserServiceDB {

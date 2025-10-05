@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.trip_genie_backend.model.User;
 import com.example.trip_genie_backend.repository.UserRepository;
 
 /**
@@ -26,7 +27,7 @@ public class userService {
      * @param userDetails The User object with the new user's details.
      * @return The registered and saved User object.
      */
-    public user registerUser(User userDetails) {
+    public User registerUser(User userDetails) {
         // Hash the plain-text password for security
         String encodedPassword = passwordEncoder.encode(userDetails.getPassword());
         userDetails.setPassword(encodedPassword);
